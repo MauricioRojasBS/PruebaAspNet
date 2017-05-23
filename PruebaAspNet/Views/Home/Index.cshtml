@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "Videojuegos";
+}
+
+<h2>
+    Videojuegos
+</h2>
+
+<div class="row">
+    <div class="col-sm-4" id="todos">
+
+    </div>
+    <div class="col-sm-8" id="videojuego">
+
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+      // Esta función se ejecuta al cargar la página
+      $(function () {
+          // Obtiene mediante ajax la partial view
+          // que tiene el listado de juegos
+          $.ajax({
+              url: "@Url.Content("~/Home/MostrarTodos")"
+          }).done(function (data) {
+              // Al div con id todos le pone como
+              // contenido la partial view recibida (data)
+              $('#todos').html(data);
+          }).fail(function () {
+              alert("error");
+          });
+        });
+
+        // Handler para el click en los elementos del div
+        // que contiene el listado de los videojuegos
+        $('#todos').on('click', 'a[data-url]', function () {
+            // Obtenemos la url a la que
+            // se debe hacer el llamado con ajax
+            var dataUrl = $(this).data('url');
+            $.ajax({
+                url: dataUrl
+            }).done(function (data) {
+                // Esta vez actualiza el div con
+                // id videojuego
+                $('#videojuego').html(data);
+            }).fail(function () {
+                alert("error");
+            });
+            // Quitamos los que estén como activos
+            $('#todos a').removeClass('active');
+            // Y activamos el actual añadiendo
+            // la clase css active
+            $(this).addClass('active');
+        });
+    </script>
+}
